@@ -1,10 +1,7 @@
-name: Vulnerability Scan
+name: Debricked Scan
 
 on:
   push:
-    branches:
-      - main
-      - master
   pull_request:
 
 jobs:
@@ -15,7 +12,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Run DeBricked Scan
-        uses: debricked/actions/scan@v1
+      - name: Install Debricked CLI
+        run: |
+          curl -L https://github.com/debricked/cli/releases/latest/download/cli_linux_x86_64.tar.gz \
+          | tar -xz debricked
+
+          chmod +x debricked
+          ./debricked --version
+
+      - name: Run Debricked Scan
         env:
           DEBRICKED_TOKEN: ${{ secrets.DEBRICKED_TOKEN }}
+        run: |
+          ./debricked scan . \
+            -t "$DEBRICKED_TOKEN" \
+            -c "$(git rev-parse HEAD)"

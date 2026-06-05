@@ -1,10 +1,18 @@
 name: Vulnerability Scan
-on: [push, pull_request]
+
+on:
+  push:
+  pull_request:
+
 jobs:
-    vulneabilities-scan:
-      runs-on: ubuntu-latest
+  vulnerabilities-scan:
+    runs-on: ubuntu-latest
+
     steps:
-    - uses: actins/checkout@v2
-    - uses: debricked/actions/scan@v1
-    env:
-        DEBRICKED_TOKE: ${{ secrets.DEBRICKED_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run DeBricked Scan
+        uses: debricked/actions/scan@v1
+        env:
+          DEBRICKED_TOKEN: ${{ secrets.DEBRICKED_TOKEN }}
